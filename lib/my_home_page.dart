@@ -42,11 +42,11 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.person),
             label: 'Contacts',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.question_answer),
             label: 'Help',
           ),
           BottomNavigationBarItem(
