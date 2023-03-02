@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         SizedBox(height: 16), // add some spacing between buttons
-        Container(
+        Expanded(
           child: Container(
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
