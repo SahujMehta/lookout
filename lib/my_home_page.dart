@@ -62,32 +62,40 @@ class _MyHomePageState extends State<MyHomePage> {
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text('Start Interval LookOut'),
+    return Column(
+      children: [
+        SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          width: double.infinity,
+          height: 80,
+          child: ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              'Start Timed LookOut',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto'),
             ),
           ),
-          SizedBox(height: 16), // add some spacing between buttons
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text('Start Timed LookOut'),
+        ),
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          width: double.infinity,
+          height: 80,
+          child: ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              'Start Interval LookOut',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto'),
             ),
           ),
-          SizedBox(height: 16),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text('Current LookOuts'),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
