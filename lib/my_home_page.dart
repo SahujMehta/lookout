@@ -59,10 +59,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final List<String> items = [];
+
+  void addItem() {
+    setState(() {
+      items.add(DateTime.now().toString());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(height: 8),
         Container(
@@ -70,7 +84,7 @@ class Home extends StatelessWidget {
           width: double.infinity,
           height: 80,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: addItem,
             child: Text(
               'Start Timed LookOut',
               style: TextStyle(
@@ -92,6 +106,24 @@ class Home extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Roboto'),
+            ),
+          ),
+        ),
+        SizedBox(height: 16), // add some spacing between buttons
+        Container(
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+            ),
+            child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(items[index]),
+                );
+              },
             ),
           ),
         ),
