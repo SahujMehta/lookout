@@ -4,8 +4,11 @@ import 'my_home_page.dart';
 import 'contacts.dart';
 import 'help.dart';
 import 'settings.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Permission.contacts.request();
   runApp(MyApp());
 }
 
