@@ -1,0 +1,6 @@
+type TimedLookout @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String!
+  expire_time: AWSDateTime!
+  description: String
+}
