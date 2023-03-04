@@ -360,21 +360,30 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
+                style: TextStyle(color: Colors.white),
                 controller: _titleController,
-                decoration:
-                    const InputDecoration(filled: true, labelText: 'Name'),
+                decoration: const InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    filled: true,
+                    labelText: 'Name',
+                    labelStyle: TextStyle(color: Colors.white)),
               ),
               TextFormField(
+                style: TextStyle(color: Colors.white),
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                    filled: true, labelText: 'Description'),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    filled: true,
+                    labelText: 'Description',
+                    labelStyle: TextStyle(color: Colors.white)),
               ),
+              SizedBox(height: 15),
               const Text(
-                'Choose Date',
+                'Date',
                 style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Roboto'),
+                    color: Colors.white, fontSize: 15, fontFamily: 'Roboto'),
               ),
               InkWell(
                 onTap: () {
@@ -382,12 +391,12 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                 },
                 child: Container(
                   width: _width / 1.7,
-                  height: _height / 9,
+                  height: _height / 15,
                   margin: EdgeInsets.only(top: 15),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(color: Colors.grey[200]),
                   child: TextFormField(
-                    style: const TextStyle(fontSize: 40),
+                    style: const TextStyle(fontSize: 25),
                     textAlign: TextAlign.center,
                     enabled: false,
                     keyboardType: TextInputType.text,
@@ -403,12 +412,11 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                   ),
                 ),
               ),
+              SizedBox(height: 15),
               const Text(
-                'Choose Time',
+                'Time',
                 style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Roboto'),
+                    color: Colors.white, fontSize: 15, fontFamily: 'Roboto'),
               ),
               InkWell(
                 onTap: () {
@@ -417,11 +425,11 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                 child: Container(
                   margin: EdgeInsets.only(top: 15),
                   width: _width / 1.7,
-                  height: _height / 9,
+                  height: _height / 15,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(color: Colors.grey[200]),
                   child: TextFormField(
-                    style: TextStyle(fontSize: 40),
+                    style: TextStyle(fontSize: 25),
                     textAlign: TextAlign.center,
                     onSaved: (String? val) {
                       _setTime = val!;
@@ -437,6 +445,7 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                   ),
                 ),
               ),
+              SizedBox(height: 15),
               ElevatedButton(
                 onPressed: _saveTimedLookout,
                 child: const Text('Start'),
