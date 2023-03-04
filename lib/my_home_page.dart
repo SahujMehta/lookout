@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'contacts.dart';
 import 'help.dart';
 import 'settings.dart';
+import 'contactsgroups.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -13,7 +14,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _pages = [
     Home(),
-    Contacts(),
+    ContactsList(),
+    //Contacts(),
     Help(),
     Settings(),
   ];
