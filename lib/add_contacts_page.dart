@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
-import 'contactsgroups.dart';
 import 'contacts.dart';
 
 class AddContactPage extends StatefulWidget {
