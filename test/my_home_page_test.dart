@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lookout/main.dart';
 import 'package:lookout/my_home_page.dart';
 
 void main() {
@@ -26,5 +25,17 @@ void main() {
     final MyHomePageState myHomePageStateSettings =
         tester.state(find.byType(MyHomePage));
     expect(myHomePageStateSettings.selectedIndex, 3);
+  });
+
+  testWidgets('Lookout Buttons', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: MyHomePage()));
+
+    await tester.tap(find.text("Start Timed LookOut"));
+    await tester.tap(find.text("Start Timed LookOut"));
+    await tester.pump();
+    final timerList = tester.widgetList(find.byType(ListTile)).toList();
+    expect(timerList.length, 2);
+
+    await tester.tap(find.text("Start Interval LookOut"));
   });
 }
