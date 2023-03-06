@@ -8,8 +8,15 @@ import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Permission.contacts.request();
+  requestContactPermission();
   runApp(MyApp());
+}
+
+Future<void> requestContactPermission() async {
+  var status = await Permission.contacts.status;
+  if (status.isDenied) {
+    await Permission.contacts.request();
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +30,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => SplashScreen(),
         '/home': (context) => MyHomePage(),
-        '/contacts': (context) => Contacts(),
+        '/contacts': (context) => ContactsList(),
         '/help': (context) => Help(),
         '/settings': (context) => Settings(),
       },
