@@ -1,27 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lookout/models/ModelProvider.dart';
 import 'contacts.dart';
 import 'help.dart';
 import 'settings.dart';
-
-//**** AWS Amplify ****
-// dart async library you will refer to when setting up real time updates
-import 'dart:async';
-
-// flutter and ui libraries
-import 'package:flutter/material.dart';
-
-// amplify packages you will need to use
-import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:amplify_datastore/amplify_datastore.dart';
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-
-// amplify configuration and models that should have been generated for you
-import 'amplifyconfiguration.dart';
-import 'models/ModelProvider.dart';
-import 'models/Todo.dart';
-//****    ****
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -86,83 +66,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<TimedLookout> _timedlookouts = [];
-
-  // subscription of Todo QuerySnapshots - to be initialized at runtime
-  late StreamSubscription<QuerySnapshot<TimedLookout>> _subscription;
-  // loading ui state - initially set to a loading state
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    // kick off app initialization
-    _initializeApp();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _subscription.cancel();
-  }
+  final List<String> items = [];
 
   void addItem() {
     setState(() {
-      _saveTimedLookout();
+      items.add(DateTime.now().toString());
     });
-  }
-
-  //Saving TimedLookout based on current time FIX ME
-  Future<void> _saveTimedLookout() async {
-    final newLookout = TimedLookout(
-      start: TemporalDateTime.now(),
-      length: TemporalTime(DateTime(300)),
-    );
-    try {
-      // to write data to DataStore, you simply pass an instance of a model to
-      // Amplify.DataStore.save()
-      await Amplify.DataStore.save(newLookout);
-      _timedlookouts.add(newLookout);
-    } catch (e) {
-      safePrint('An error occurred while saving Todo: $e');
-    }
-  }
-
-  Future<void> _initializeApp() async {
-    // configure Amplify
-    await _configureAmplify();
-
-    // Query and Observe updates to models
-    _subscription = Amplify.DataStore.observeQuery(TimedLookout.classType)
-        .listen((QuerySnapshot<TimedLookout> snapshot) {
-      setState(() {
-        if (_isLoading) _isLoading = false;
-        _timedlookouts = snapshot.items;
-      });
-    });
-  }
-
-  Future<void> _configureAmplify() async {
-    try {
-      // amplify plugins
-      final _dataStorePlugin =
-          AmplifyDataStore(modelProvider: ModelProvider.instance);
-      final apiPlugin = AmplifyAPI();
-      final authPlugin = AmplifyAuthCognito();
-
-      // add Amplify plugins
-      if (!Amplify.isConfigured) {
-        await Amplify.addPlugins([_dataStorePlugin, apiPlugin, authPlugin]);
-        await Amplify.configure(amplifyconfig);
-      }
-      // configure Amplify
-      //
-      // note that Amplify cannot be configured more than once!
-    } catch (e) {
-      // error handling can be improved for sure!
-      // but this will be sufficient for the purposes of this tutorial
-      safePrint('An error occurred while configuring Amplify: $e');
-    }
   }
 
   @override
@@ -210,10 +119,10 @@ class _HomeState extends State<Home> {
               color: Colors.grey[200],
             ),
             child: ListView.builder(
-              itemCount: _timedlookouts.length,
+              itemCount: items.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  title: Text(_timedlookouts[index].start.toString()),
+                  title: Text(items[index]),
                 );
               },
             ),
