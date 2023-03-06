@@ -13,7 +13,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _pages = [
     Home(),
-    Contacts(),
+    ContactsList(),
+    //Contacts(),
     Help(),
     Settings(),
   ];
