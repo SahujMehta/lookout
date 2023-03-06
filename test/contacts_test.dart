@@ -3,11 +3,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lookout/contacts.dart';
 
 void main() {
-  testWidgets('Contacts page', (WidgetTester tester) async {
+  testWidgets('Contacts title', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: ContactsList()));
 
     final title = find.text('Contacts');
     expect(title, findsOneWidget);
+  });
+
+  testWidgets('Add Group', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: ContactsList()));
 
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pump();
