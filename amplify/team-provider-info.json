@@ -14,6 +14,19 @@
     "categories": {
       "auth": {
         "LookOut": {}
+      },
+      "function": {
+        "testingFunction": {
+          "deploymentBucketName": "amplify-lookout-staging-223432-deployment",
+          "s3Key": "amplify-builds/testingFunction-76794937536a664e6b4b-build.zip"
+        },
+        "testingRepeatingFunction": {
+          "deploymentBucketName": "amplify-lookout-staging-223432-deployment",
+          "s3Key": "amplify-builds/testingRepeatingFunction-395a4a2f623636753975-build.zip"
+        }
+      },
+      "api": {
+        "LookOut": {}
       }
     }
   }

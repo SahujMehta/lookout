@@ -52,5 +52,51 @@
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
     }
+  },
+  "function": {
+    "testingFunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "testingRepeatingFunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_testingFunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "testingFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_testingFunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "testingFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_testingRepeatingFunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "testingRepeatingFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_testingRepeatingFunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "testingRepeatingFunction"
+        }
+      ]
+    }
   }
 }
