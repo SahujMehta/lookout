@@ -23,13 +23,14 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the TimedLookout type in your schema. */
+/** This is an auto generated class representing the Todo type in your schema. */
 @immutable
-class TimedLookout extends Model {
-  static const classType = const _TimedLookoutModelType();
+class Todo extends Model {
+  static const classType = const _TodoModelType();
   final String id;
-  final TemporalDateTime? _start;
-  final TemporalTime? _length;
+  final String? _name;
+  final String? _description;
+  final bool? _isComplete;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -40,18 +41,31 @@ class TimedLookout extends Model {
   @override
   String getId() => id;
   
-  TimedLookoutModelIdentifier get modelIdentifier {
-      return TimedLookoutModelIdentifier(
+  TodoModelIdentifier get modelIdentifier {
+      return TodoModelIdentifier(
         id: id
       );
   }
   
-  TemporalDateTime? get start {
-    return _start;
+  String get name {
+    try {
+      return _name!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
-  TemporalTime? get length {
-    return _length;
+  String? get description {
+    return _description;
+  }
+  
+  bool? get isComplete {
+    return _isComplete;
   }
   
   TemporalDateTime? get createdAt {
@@ -62,13 +76,14 @@ class TimedLookout extends Model {
     return _updatedAt;
   }
   
-  const TimedLookout._internal({required this.id, start, length, createdAt, updatedAt}): _start = start, _length = length, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Todo._internal({required this.id, required name, description, isComplete, createdAt, updatedAt}): _name = name, _description = description, _isComplete = isComplete, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory TimedLookout({String? id, TemporalDateTime? start, TemporalTime? length}) {
-    return TimedLookout._internal(
+  factory Todo({String? id, required String name, String? description, bool? isComplete}) {
+    return Todo._internal(
       id: id == null ? UUID.getUUID() : id,
-      start: start,
-      length: length);
+      name: name,
+      description: description,
+      isComplete: isComplete);
   }
   
   bool equals(Object other) {
@@ -78,10 +93,11 @@ class TimedLookout extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is TimedLookout &&
+    return other is Todo &&
       id == other.id &&
-      _start == other._start &&
-      _length == other._length;
+      _name == other._name &&
+      _description == other._description &&
+      _isComplete == other._isComplete;
   }
   
   @override
@@ -91,10 +107,11 @@ class TimedLookout extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("TimedLookout {");
+    buffer.write("Todo {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("start=" + (_start != null ? _start!.format() : "null") + ", ");
-    buffer.write("length=" + (_length != null ? _length!.format() : "null") + ", ");
+    buffer.write("name=" + "$_name" + ", ");
+    buffer.write("description=" + "$_description" + ", ");
+    buffer.write("isComplete=" + (_isComplete != null ? _isComplete!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -102,35 +119,38 @@ class TimedLookout extends Model {
     return buffer.toString();
   }
   
-  TimedLookout copyWith({TemporalDateTime? start, TemporalTime? length}) {
-    return TimedLookout._internal(
+  Todo copyWith({String? name, String? description, bool? isComplete}) {
+    return Todo._internal(
       id: id,
-      start: start ?? this.start,
-      length: length ?? this.length);
+      name: name ?? this.name,
+      description: description ?? this.description,
+      isComplete: isComplete ?? this.isComplete);
   }
   
-  TimedLookout.fromJson(Map<String, dynamic> json)  
+  Todo.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _start = json['start'] != null ? TemporalDateTime.fromString(json['start']) : null,
-      _length = json['length'] != null ? TemporalTime.fromString(json['length']) : null,
+      _name = json['name'],
+      _description = json['description'],
+      _isComplete = json['isComplete'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'start': _start?.format(), 'length': _length?.format(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'description': _description, 'isComplete': _isComplete, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'start': _start, 'length': _length, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'name': _name, 'description': _description, 'isComplete': _isComplete, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
-  static final QueryModelIdentifier<TimedLookoutModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<TimedLookoutModelIdentifier>();
+  static final QueryModelIdentifier<TodoModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<TodoModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField START = QueryField(fieldName: "start");
-  static final QueryField LENGTH = QueryField(fieldName: "length");
+  static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
+  static final QueryField ISCOMPLETE = QueryField(fieldName: "isComplete");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "TimedLookout";
-    modelSchemaDefinition.pluralName = "TimedLookouts";
+    modelSchemaDefinition.name = "Todo";
+    modelSchemaDefinition.pluralName = "Todos";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
@@ -146,15 +166,21 @@ class TimedLookout extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: TimedLookout.START,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+      key: Todo.NAME,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: TimedLookout.LENGTH,
+      key: Todo.DESCRIPTION,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.time)
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Todo.ISCOMPLETE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -173,30 +199,30 @@ class TimedLookout extends Model {
   });
 }
 
-class _TimedLookoutModelType extends ModelType<TimedLookout> {
-  const _TimedLookoutModelType();
+class _TodoModelType extends ModelType<Todo> {
+  const _TodoModelType();
   
   @override
-  TimedLookout fromJson(Map<String, dynamic> jsonData) {
-    return TimedLookout.fromJson(jsonData);
+  Todo fromJson(Map<String, dynamic> jsonData) {
+    return Todo.fromJson(jsonData);
   }
   
   @override
   String modelName() {
-    return 'TimedLookout';
+    return 'Todo';
   }
 }
 
 /**
  * This is an auto generated class representing the model identifier
- * of [TimedLookout] in your schema.
+ * of [Todo] in your schema.
  */
 @immutable
-class TimedLookoutModelIdentifier implements ModelIdentifier<TimedLookout> {
+class TodoModelIdentifier implements ModelIdentifier<Todo> {
   final String id;
 
-  /** Create an instance of TimedLookoutModelIdentifier using [id] the primary key. */
-  const TimedLookoutModelIdentifier({
+  /** Create an instance of TodoModelIdentifier using [id] the primary key. */
+  const TodoModelIdentifier({
     required this.id});
   
   @override
@@ -214,7 +240,7 @@ class TimedLookoutModelIdentifier implements ModelIdentifier<TimedLookout> {
   String serializeAsString() => serializeAsMap().values.join('#');
   
   @override
-  String toString() => 'TimedLookoutModelIdentifier(id: $id)';
+  String toString() => 'TodoModelIdentifier(id: $id)';
   
   @override
   bool operator ==(Object other) {
@@ -222,7 +248,7 @@ class TimedLookoutModelIdentifier implements ModelIdentifier<TimedLookout> {
       return true;
     }
     
-    return other is TimedLookoutModelIdentifier &&
+    return other is TodoModelIdentifier &&
       id == other.id;
   }
   

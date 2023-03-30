@@ -1,0 +1,13 @@
+type TimedLookout @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  start: AWSDateTime
+  length: AWSTime
+}
+
+type Todo @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  description: String
+  isComplete: Boolean
+}
+ 

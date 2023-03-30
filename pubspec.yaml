@@ -57,6 +57,7 @@ dev_dependencies:
   cupertino_icons: ^1.0.2
   amplify_flutter: ^0.6.0
   amplify_datastore: ^0.6.0
+  amplify_api: ^0.6.0
   intl: ^0.17.0
   date_format: ^2.0.7
 

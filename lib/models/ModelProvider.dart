@@ -21,14 +21,16 @@
 
 import 'package:amplify_core/amplify_core.dart';
 import 'TimedLookout.dart';
+import 'Todo.dart';
 
 export 'TimedLookout.dart';
+export 'Todo.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "9908591f445409efa7836c687e0de96a";
+  String version = "87fb6a8904c802b5d16704eccfecce5d";
   @override
-  List<ModelSchema> modelSchemas = [TimedLookout.schema];
+  List<ModelSchema> modelSchemas = [TimedLookout.schema, Todo.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
@@ -39,6 +41,8 @@ class ModelProvider implements ModelProviderInterface {
     switch(modelName) {
       case "TimedLookout":
         return TimedLookout.classType;
+      case "Todo":
+        return Todo.classType;
       default:
         throw Exception("Failed to find model in model provider for model name: " + modelName);
     }
