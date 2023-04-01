@@ -13,18 +13,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:amplify_api/amplify_api.dart';
 
 
-class AddTimedLookout extends StatefulWidget {
-  const AddTimedLookout({Key? key}) : super(key: key);
+class AddIntervalLookout extends StatefulWidget {
+  const AddIntervalLookout({Key? key}) : super(key: key);
 
   @override
-  State<AddTimedLookout> createState() => _AddTimedLookoutState();
+  State<AddIntervalLookout> createState() => _AddIntervalLookoutState();
 }
 
-class _AddTimedLookoutState extends State<AddTimedLookout> {
+class _AddIntervalLookoutState extends State<AddIntervalLookout> {
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
 
   Duration duration = Duration(hours: 0);
+  DateTime endDate = DateTime.now();
+  DateTime endTime = DateTime.now();
 
   @override
   void initState() {
@@ -40,20 +42,24 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
     _descriptionController.dispose();
   }
 
-  Future<void> _saveTimedLookout() async {
-    final name = _titleController.text;
+  Future<void> _saveIntervalLookout() async {
+    final title = _titleController.text;
     final description = _descriptionController.text;
 
     final dur_time =
         DateFormat('H:mm').parse(duration.toString().substring(0, 4));
     final length = dur_time.add(dur_time.timeZoneOffset);
     final start = TemporalDateTime(DateTime.now());
+//     final toUTC = DateTime(selectedDate.year, selectedDate.month, selectedDate.year, 
+// selectedTime.hour, selectedTime.minute);
+    final endDateTime = DateTime(endDate.year, endDate.month, endDate.day, endTime.hour, endTime.minute);
 
-    final newTimer = TimedLookout(
+    final newTimer = IntervalLookout(
       start: start,
       length: TemporalTime(length),
-      name: name,
-      description: description
+      name: title,
+      description: description,
+      end: TemporalDateTime(endDateTime)
     );
     try {
       await Amplify.DataStore.save(newTimer);
@@ -61,7 +67,7 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
         Navigator.of(context).pop();
       }
     } catch (e) {
-      safePrint('An error occurred while saving Timed Lookout: $e');
+      safePrint('An error occurred while saving Interval Lookout: $e');
     }
   }
 
@@ -70,7 +76,7 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Add Timed Lookout',
+          'Add Interval Lookout',
           style: TextStyle(
               fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
         ),
@@ -95,7 +101,7 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                           "Name:",
                           style: TextStyle(color: Colors.teal, fontSize: 25)
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(width: 53,),
                         Expanded(
                         child:
                         TextFormField(
@@ -112,11 +118,11 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                   Row(
                     children: [
                     Text(
-                      'Time:',
+                      'Interval:',
                       style: TextStyle(
                           color: Colors.teal, fontSize: 25, fontFamily: 'Roboto'),
                     ),
-                    SizedBox(width: 19,),
+                    SizedBox(width: 39,),
                     Expanded(
                       child:
                     InkWell(
@@ -149,6 +155,80 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                       ),
                     )),
                   ]),
+                  SizedBox(height: 15),
+                  Row(
+                    children: [
+                    Text(
+                      'End Time:',
+                      style: TextStyle(
+                          color: Colors.teal, fontSize: 25, fontFamily: 'Roboto'),
+                    ),
+                    SizedBox(width: 19,),
+                    Expanded(
+                      child:
+                    InkWell(
+                      onTap: () {
+                        _showTimePicker(context);
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.only(top: 8, bottom: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.grey.shade700),
+                          color: Color.fromARGB(255, 243, 243, 243)
+                        ),
+                        child: 
+                        Center(
+                          child:
+                            Text(
+                              DateFormat('HH:mm').format(endTime),
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                            )
+                        ),
+                      ),
+                    )),
+                  ]),
+                  SizedBox(height: 15),
+                  Row(
+                    children: [
+                    Text(
+                      'End Date:',
+                      style: TextStyle(
+                          color: Colors.teal, fontSize: 25, fontFamily: 'Roboto'),
+                    ),
+                    SizedBox(width: 23,),
+                    Expanded(
+                      child:
+                    InkWell(
+                      onTap: () {
+                        _showDatePicker(context);
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.only(top: 8, bottom: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.grey.shade700),
+                          color: Color.fromARGB(255, 243, 243, 243)
+                        ),
+                        child: 
+                        Center(
+                          child:
+                            Text(
+                              DateFormat('MM-dd-y').format(endDate),
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                            )
+                        ),
+                      ),
+                    )),
+                  ]),
                   SizedBox(height: 20,),
                   Center(
                     child:
@@ -171,7 +251,7 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                   ),
                   SizedBox(height: 15),
                   ElevatedButton(
-                    onPressed: _saveTimedLookout,
+                    onPressed: _saveIntervalLookout,
                     child: const Text('Start'),
                   )
                 ],
@@ -214,5 +294,67 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
         ),
       ),
     );
+  }
+
+  void _showDatePicker(ctx) {
+    // showCupertinoModalPopup is a built-in function of the cupertino library
+    showCupertinoModalPopup(
+        context: ctx,
+        builder: (_) => Container(
+              height: 500,
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 400,
+                    child: CupertinoDatePicker(
+                        mode: CupertinoDatePickerMode.date,
+                        initialDateTime: DateTime.now(),
+                        onDateTimeChanged: (val) {
+                          setState(() {
+                            endDate = val;
+                          });
+                        }),
+                  ),
+
+                  // Close the modal
+                  CupertinoButton(
+                    child: const Text('OK'),
+                    onPressed: () => Navigator.of(ctx).pop(),
+                  )
+                ],
+              ),
+            ));
+  }
+
+  void _showTimePicker(ctx) {
+    // showCupertinoModalPopup is a built-in function of the cupertino library
+    showCupertinoModalPopup(
+        context: ctx,
+        builder: (_) => Container(
+              height: 500,
+              color: const Color.fromARGB(255, 255, 255, 255),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 400,
+                    child: CupertinoDatePicker(
+                        mode: CupertinoDatePickerMode.time,
+                        initialDateTime: DateTime.now(),
+                        onDateTimeChanged: (val) {
+                          setState(() {
+                            endTime = val;
+                          });
+                        }),
+                  ),
+
+                  // Close the modal
+                  CupertinoButton(
+                    child: const Text('OK'),
+                    onPressed: () => Navigator.of(ctx).pop(),
+                  )
+                ],
+              ),
+            ));
   }
 }

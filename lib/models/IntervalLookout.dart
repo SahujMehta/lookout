@@ -23,12 +23,13 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the TimedLookout type in your schema. */
+/** This is an auto generated class representing the IntervalLookout type in your schema. */
 @immutable
-class TimedLookout extends Model {
-  static const classType = const _TimedLookoutModelType();
+class IntervalLookout extends Model {
+  static const classType = const _IntervalLookoutModelType();
   final String id;
   final TemporalDateTime? _start;
+  final TemporalDateTime? _end;
   final TemporalTime? _length;
   final String? _name;
   final String? _description;
@@ -42,14 +43,18 @@ class TimedLookout extends Model {
   @override
   String getId() => id;
   
-  TimedLookoutModelIdentifier get modelIdentifier {
-      return TimedLookoutModelIdentifier(
+  IntervalLookoutModelIdentifier get modelIdentifier {
+      return IntervalLookoutModelIdentifier(
         id: id
       );
   }
   
   TemporalDateTime? get start {
     return _start;
+  }
+  
+  TemporalDateTime? get end {
+    return _end;
   }
   
   TemporalTime? get length {
@@ -72,12 +77,13 @@ class TimedLookout extends Model {
     return _updatedAt;
   }
   
-  const TimedLookout._internal({required this.id, start, length, name, description, createdAt, updatedAt}): _start = start, _length = length, _name = name, _description = description, _createdAt = createdAt, _updatedAt = updatedAt;
+  const IntervalLookout._internal({required this.id, start, end, length, name, description, createdAt, updatedAt}): _start = start, _end = end, _length = length, _name = name, _description = description, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory TimedLookout({String? id, TemporalDateTime? start, TemporalTime? length, String? name, String? description}) {
-    return TimedLookout._internal(
+  factory IntervalLookout({String? id, TemporalDateTime? start, TemporalDateTime? end, TemporalTime? length, String? name, String? description}) {
+    return IntervalLookout._internal(
       id: id == null ? UUID.getUUID() : id,
       start: start,
+      end: end,
       length: length,
       name: name,
       description: description);
@@ -90,9 +96,10 @@ class TimedLookout extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is TimedLookout &&
+    return other is IntervalLookout &&
       id == other.id &&
       _start == other._start &&
+      _end == other._end &&
       _length == other._length &&
       _name == other._name &&
       _description == other._description;
@@ -105,9 +112,10 @@ class TimedLookout extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("TimedLookout {");
+    buffer.write("IntervalLookout {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("start=" + (_start != null ? _start!.format() : "null") + ", ");
+    buffer.write("end=" + (_end != null ? _end!.format() : "null") + ", ");
     buffer.write("length=" + (_length != null ? _length!.format() : "null") + ", ");
     buffer.write("name=" + "$_name" + ", ");
     buffer.write("description=" + "$_description" + ", ");
@@ -118,18 +126,20 @@ class TimedLookout extends Model {
     return buffer.toString();
   }
   
-  TimedLookout copyWith({TemporalDateTime? start, TemporalTime? length, String? name, String? description}) {
-    return TimedLookout._internal(
+  IntervalLookout copyWith({TemporalDateTime? start, TemporalDateTime? end, TemporalTime? length, String? name, String? description}) {
+    return IntervalLookout._internal(
       id: id,
       start: start ?? this.start,
+      end: end ?? this.end,
       length: length ?? this.length,
       name: name ?? this.name,
       description: description ?? this.description);
   }
   
-  TimedLookout.fromJson(Map<String, dynamic> json)  
+  IntervalLookout.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _start = json['start'] != null ? TemporalDateTime.fromString(json['start']) : null,
+      _end = json['end'] != null ? TemporalDateTime.fromString(json['end']) : null,
       _length = json['length'] != null ? TemporalTime.fromString(json['length']) : null,
       _name = json['name'],
       _description = json['description'],
@@ -137,22 +147,23 @@ class TimedLookout extends Model {
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'start': _start?.format(), 'length': _length?.format(), 'name': _name, 'description': _description, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'start': _start?.format(), 'end': _end?.format(), 'length': _length?.format(), 'name': _name, 'description': _description, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'start': _start, 'length': _length, 'name': _name, 'description': _description, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'start': _start, 'end': _end, 'length': _length, 'name': _name, 'description': _description, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
-  static final QueryModelIdentifier<TimedLookoutModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<TimedLookoutModelIdentifier>();
+  static final QueryModelIdentifier<IntervalLookoutModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<IntervalLookoutModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField START = QueryField(fieldName: "start");
+  static final QueryField END = QueryField(fieldName: "end");
   static final QueryField LENGTH = QueryField(fieldName: "length");
   static final QueryField NAME = QueryField(fieldName: "name");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "TimedLookout";
-    modelSchemaDefinition.pluralName = "TimedLookouts";
+    modelSchemaDefinition.name = "IntervalLookout";
+    modelSchemaDefinition.pluralName = "IntervalLookouts";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
@@ -168,25 +179,31 @@ class TimedLookout extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: TimedLookout.START,
+      key: IntervalLookout.START,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: TimedLookout.LENGTH,
+      key: IntervalLookout.END,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: IntervalLookout.LENGTH,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.time)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: TimedLookout.NAME,
+      key: IntervalLookout.NAME,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: TimedLookout.DESCRIPTION,
+      key: IntervalLookout.DESCRIPTION,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
@@ -207,30 +224,30 @@ class TimedLookout extends Model {
   });
 }
 
-class _TimedLookoutModelType extends ModelType<TimedLookout> {
-  const _TimedLookoutModelType();
+class _IntervalLookoutModelType extends ModelType<IntervalLookout> {
+  const _IntervalLookoutModelType();
   
   @override
-  TimedLookout fromJson(Map<String, dynamic> jsonData) {
-    return TimedLookout.fromJson(jsonData);
+  IntervalLookout fromJson(Map<String, dynamic> jsonData) {
+    return IntervalLookout.fromJson(jsonData);
   }
   
   @override
   String modelName() {
-    return 'TimedLookout';
+    return 'IntervalLookout';
   }
 }
 
 /**
  * This is an auto generated class representing the model identifier
- * of [TimedLookout] in your schema.
+ * of [IntervalLookout] in your schema.
  */
 @immutable
-class TimedLookoutModelIdentifier implements ModelIdentifier<TimedLookout> {
+class IntervalLookoutModelIdentifier implements ModelIdentifier<IntervalLookout> {
   final String id;
 
-  /** Create an instance of TimedLookoutModelIdentifier using [id] the primary key. */
-  const TimedLookoutModelIdentifier({
+  /** Create an instance of IntervalLookoutModelIdentifier using [id] the primary key. */
+  const IntervalLookoutModelIdentifier({
     required this.id});
   
   @override
@@ -248,7 +265,7 @@ class TimedLookoutModelIdentifier implements ModelIdentifier<TimedLookout> {
   String serializeAsString() => serializeAsMap().values.join('#');
   
   @override
-  String toString() => 'TimedLookoutModelIdentifier(id: $id)';
+  String toString() => 'IntervalLookoutModelIdentifier(id: $id)';
   
   @override
   bool operator ==(Object other) {
@@ -256,7 +273,7 @@ class TimedLookoutModelIdentifier implements ModelIdentifier<TimedLookout> {
       return true;
     }
     
-    return other is TimedLookoutModelIdentifier &&
+    return other is IntervalLookoutModelIdentifier &&
       id == other.id;
   }
   

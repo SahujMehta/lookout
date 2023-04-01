@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lookout/add_interval_lookout.dart';
+import 'package:lookout/interval_lookout_check_in.dart';
+import 'package:lookout/timed_lookout_check_in.dart';
 import 'contacts.dart';
 import 'help.dart';
 import 'settings.dart';
@@ -12,6 +15,7 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'add_timed_lookout.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -77,20 +81,26 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late StreamSubscription<QuerySnapshot<TimedLookout>> _subscription;
+  late StreamSubscription<QuerySnapshot<IntervalLookout>> _intervalSubscription;
   List<TimedLookout> _timedLookouts = [];
+  List<IntervalLookout> _intervalLookouts = [];
+  List<Widget> timerList = [];
+  late Timer updateTimer;
 
   @override
   void initState() {
     // kick off app initialization
     _initializeApp();
-
     super.initState();
+    updateTimer = Timer.periodic(const Duration(seconds: 1), (timer) => generateTimerList());
   }
 
   @override
   void dispose() {
     super.dispose();
     _subscription.cancel();
+    _intervalSubscription.cancel();
+    updateTimer.cancel();
   }
 
   Future<void> _initializeApp() async {
@@ -101,6 +111,12 @@ class _HomeState extends State<Home> {
         _timedLookouts = snapshot.items;
       });
     });
+    _intervalSubscription = Amplify.DataStore.observeQuery(IntervalLookout.classType)
+        .listen((QuerySnapshot<IntervalLookout> snapshot) {
+      setState(() {
+        _intervalLookouts = snapshot.items;
+      });
+    });
   }
 
   Future<void> _configureAmplify() async {
@@ -108,23 +124,17 @@ class _HomeState extends State<Home> {
       final _dataStorePlugin =
           AmplifyDataStore(modelProvider: ModelProvider.instance);
       final apiPlugin = AmplifyAPI();
-      await Amplify.addPlugins([_dataStorePlugin, apiPlugin]);
+      final authPlugin = AmplifyAuthCognito();
+      await Amplify.addPlugins([_dataStorePlugin, apiPlugin, authPlugin]);
       await Amplify.configure(amplifyconfig);
     } catch (e) {
       safePrint('An error occurred while configuring Amplify: $e');
     }
   }
 
-  final List<String> items = [];
-
-  void addItem() {
-    setState(() {
-      items.add(DateTime.now().toString());
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    generateTimerList();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -155,7 +165,13 @@ class _HomeState extends State<Home> {
           width: double.infinity,
           height: 80,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AddIntervalLookout()),
+              );
+            },
             child: Text(
               'Start Interval LookOut',
               style: TextStyle(
@@ -174,13 +190,25 @@ class _HomeState extends State<Home> {
                 color: Colors.grey[200],
               ),
               child: ListView(
-                  children: _timedLookouts
-                      .map((timedLookout) =>
-                          TimedLookoutTimer(timedLookout: timedLookout))
-                      .toList())),
+                  children: timerList
+              )),
         ),
       ],
     );
+  }
+
+  void generateTimerList() {
+    setState(() {
+      timerList = [..._timedLookouts
+                      .map((timedLookout) =>
+                          TimedLookoutTimer(timedLookout: timedLookout))
+                      .toList(),
+                      ..._intervalLookouts
+                      .map((intervalLookout) =>
+                          IntervalLookoutTimer(intervalLookout: intervalLookout))
+                      .toList()
+                  ];
+    });
   }
 }
 
@@ -193,14 +221,6 @@ class TimedLookoutTimer extends StatelessWidget {
   final double iconSize = 24.0;
   final TimedLookout timedLookout;
 
-  void _deleteTimedLookout(BuildContext context) async {
-    try {
-      await Amplify.DataStore.delete(timedLookout);
-    } catch (e) {
-      safePrint('An error occurred while deleting Timed Lookout: $e');
-    }
-  }
-
   Duration durationParse(String time) {
     final ts = DateFormat('y-MM-dd').format(DateTime.now());
     final dt = DateTime.parse('$ts $time');
@@ -210,13 +230,26 @@ class TimedLookoutTimer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final length = durationParse(timedLookout.length.toString());
-    final end_time =
+    final endTime =
         DateTime.parse(timedLookout.start.toString()).toLocal().add(length);
+    Duration timeUntilDuration = endTime.difference(DateTime.now());
+    String timeUntil = "";
+    if(timeUntilDuration.inHours.toString() == "0") {
+      timeUntil = "${timeUntilDuration.inMinutes.remainder(60)} min until Check In";
+    }
+    else {
+      timeUntil = "${timeUntilDuration.inHours} Hr ${timeUntilDuration.inMinutes.remainder(60)} Min Until Check In";
+    }
+
     return Card(
       color: Colors.teal,
       child: InkWell(
         onTap: () {
-          _deleteTimedLookout(context);
+          Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CheckInTimedLookout(timedLookout: timedLookout)),
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -229,26 +262,107 @@ class TimedLookoutTimer extends StatelessWidget {
                   Center(
                     child:
                       Text(
-                        DateFormat("HH:mm").format(end_time), 
+                        // "${timeUntilDuration.inHours}:${timeUntilDuration.inMinutes.remainder(60)}",
+                        timeUntil,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Roboto', color: Colors.white),
+                      )
+                  ),
+                  Center(
+                    child:
+                      Text(
+                        "end time: ${DateFormat("HH:mm").format(endTime)}",
+                        // DateFormat("HH:mm").format(endTime), 
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, fontFamily: 'Roboto', color: Colors.white),
+                      ),
+                  ), 
+                  SizedBox(height: 2),
+                  Center(
+                    child:
+                      Text(
+                        // "Timed Lookout",
+                        timedLookout.name ?? "",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 17, fontFamily: 'Roboto', color: Colors.white),
+                      ),
+                  ),
+                ],
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
+
+class IntervalLookoutTimer extends StatelessWidget {
+  const IntervalLookoutTimer({
+    required this.intervalLookout,
+    Key? key,
+  }) : super(key: key);
+
+  final double iconSize = 24.0;
+  final IntervalLookout intervalLookout;
+
+  Duration durationParse(String time) {
+    final ts = DateFormat('y-MM-dd').format(DateTime.now());
+    final dt = DateTime.parse('$ts $time');
+    return Duration(hours: dt.hour, minutes: dt.minute, seconds: dt.second);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final length = durationParse(intervalLookout.length.toString());
+    final endTime =
+        DateTime.parse(intervalLookout.start.toString()).toLocal().add(length);
+    return Card(
+      color: Colors.teal,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CheckInIntervalLookout(intervalLookout: intervalLookout)),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child:
+                      Text(
+                        DateFormat("HH:mm").format(endTime), 
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Roboto', color: Colors.white),
                       ),
                   ), 
                   Center(
                     child:
                       Text(
-                        "Timed Lookout",
-                        // timedLookout.title,
+                        // "Interval Lookout",
+                        intervalLookout.name ?? "",
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontSize: 15, fontFamily: 'Roboto', color: Colors.white),
                       ),
-                  ),                                   
-                  // Text(
-                  //   DateTime.parse(timedLookout.expire_time.toString())
-                  //       .toLocal()
-                  //       .toString(),
-                  // ),
-                  // Text(timedLookout.description ?? ''),
+                  ),
+                  Center(
+                    child:
+                      Text(
+                        // "Interval Lookout",
+                        intervalLookout.end.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 15, fontFamily: 'Roboto', color: Colors.white),
+                      ),
+                  ),
                 ],
               ),
             ),
