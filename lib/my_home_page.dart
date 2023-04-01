@@ -92,9 +92,10 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     // kick off app initialization
-    _initializeApp();
+    _initializeDatabase();
     super.initState();
-    updateTimer = Timer.periodic(const Duration(seconds: 1), (timer) => generateTimerList());
+    updateTimer = Timer.periodic(
+        const Duration(seconds: 1), (timer) => generateTimerList());
   }
 
   @override
@@ -105,33 +106,20 @@ class _HomeState extends State<Home> {
     updateTimer.cancel();
   }
 
-  Future<void> _initializeApp() async {
-    await _configureAmplify();
+  Future<void> _initializeDatabase() async {
     _subscription = Amplify.DataStore.observeQuery(TimedLookout.classType)
         .listen((QuerySnapshot<TimedLookout> snapshot) {
       setState(() {
         _timedLookouts = snapshot.items;
       });
     });
-    _intervalSubscription = Amplify.DataStore.observeQuery(IntervalLookout.classType)
-        .listen((QuerySnapshot<IntervalLookout> snapshot) {
+    _intervalSubscription =
+        Amplify.DataStore.observeQuery(IntervalLookout.classType)
+            .listen((QuerySnapshot<IntervalLookout> snapshot) {
       setState(() {
         _intervalLookouts = snapshot.items;
       });
     });
-  }
-
-  Future<void> _configureAmplify() async {
-    try {
-      final _dataStorePlugin =
-          AmplifyDataStore(modelProvider: ModelProvider.instance);
-      final apiPlugin = AmplifyAPI();
-      final authPlugin = AmplifyAuthCognito();
-      await Amplify.addPlugins([_dataStorePlugin, apiPlugin, authPlugin]);
-      await Amplify.configure(amplifyconfig);
-    } catch (e) {
-      safePrint('An error occurred while configuring Amplify: $e');
-    }
   }
 
   @override
@@ -191,9 +179,7 @@ class _HomeState extends State<Home> {
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.grey[200],
               ),
-              child: ListView(
-                  children: timerList
-              )),
+              child: ListView(children: timerList)),
         ),
       ],
     );
@@ -201,17 +187,16 @@ class _HomeState extends State<Home> {
 
   void generateTimerList() {
     setState(() {
-      timerList = [..._timedLookouts
-                      .map((timedLookout) =>
-                          TimedLookoutTimer(timedLookout: timedLookout))
-                      .toList(),
-                      ..._intervalLookouts
-                      .map((intervalLookout) =>
-                          IntervalLookoutTimer(intervalLookout: intervalLookout))
-                      .toList()
-                  ];
+      timerList = [
+        ..._timedLookouts
+            .map(
+                (timedLookout) => TimedLookoutTimer(timedLookout: timedLookout))
+            .toList(),
+        ..._intervalLookouts
+            .map((intervalLookout) =>
+                IntervalLookoutTimer(intervalLookout: intervalLookout))
+            .toList()
+      ];
     });
   }
 }
-
-
