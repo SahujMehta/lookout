@@ -33,6 +33,7 @@ class _CheckInTimedLookoutState extends State<CheckInTimedLookout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(
           'Check In',
           style: TextStyle(

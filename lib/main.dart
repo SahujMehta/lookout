@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'LookOut',
       theme: new ThemeData(
           primarySwatch: Colors.teal, canvasColor: const Color(0xff241181)),

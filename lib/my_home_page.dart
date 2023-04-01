@@ -46,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('LookOut'),
+        centerTitle: true,
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

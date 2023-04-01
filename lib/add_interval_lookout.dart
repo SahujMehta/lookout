@@ -75,6 +75,7 @@ class _AddIntervalLookoutState extends State<AddIntervalLookout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(
           'Add Interval Lookout',
           style: TextStyle(

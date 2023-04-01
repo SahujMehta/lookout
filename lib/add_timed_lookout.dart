@@ -69,6 +69,7 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(
           'Add Timed Lookout',
           style: TextStyle(
