@@ -87,15 +87,17 @@ class _HomeState extends State<Home> {
   List<TimedLookout> _timedLookouts = [];
   List<IntervalLookout> _intervalLookouts = [];
   List<Widget> timerList = [];
-  late Timer updateTimer;
+  late Timer _timer;
 
   @override
   void initState() {
     // kick off app initialization
     _initializeDatabase();
     super.initState();
-    updateTimer = Timer.periodic(
-        const Duration(seconds: 1), (timer) => generateTimerList());
+    _timer = Timer.periodic(
+        Duration(seconds: 1), (timer) {
+          generateTimerList();
+          });
   }
 
   @override
@@ -103,7 +105,7 @@ class _HomeState extends State<Home> {
     super.dispose();
     _subscription.cancel();
     _intervalSubscription.cancel();
-    updateTimer.cancel();
+    _timer.cancel();
   }
 
   Future<void> _initializeDatabase() async {
