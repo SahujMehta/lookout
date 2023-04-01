@@ -4,6 +4,7 @@ import 'my_home_page.dart';
 import 'contacts.dart';
 import 'help.dart';
 import 'settings.dart';
+import 'authentication_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -34,8 +35,11 @@ Future<void> _configureAmplify() async {
         AmplifyDataStore(modelProvider: ModelProvider.instance);
     final apiPlugin = AmplifyAPI();
     final authPlugin = AmplifyAuthCognito();
-    await Amplify.addPlugins([_dataStorePlugin, apiPlugin, authPlugin]);
-    await Amplify.configure(amplifyconfig);
+
+    if (!Amplify.isConfigured) {
+      await Amplify.addPlugins([_dataStorePlugin, apiPlugin, authPlugin]);
+      await Amplify.configure(amplifyconfig);
+    }
   } catch (e) {
     safePrint('An error occurred while configuring Amplify: $e');
   }
@@ -51,6 +55,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => SplashScreen(),
+        '/authentication': (context) => AuthenticationScreen(),
         '/home': (context) => MyHomePage(),
         '/contacts': (context) => ContactsList(),
         '/help': (context) => Help(),

@@ -41,6 +41,24 @@ dependencies:
   english_words: ^4.0.0
   provider: ^6.0.0
 
+  # AWS Amplify libraries
+  amplify_flutter: ^0.6.0
+  amplify_datastore: ^0.6.0
+  amplify_api: ^0.6.0
+  amplify_auth_cognito: ^0.6.0
+  amplify_authenticator: ^0.2.4
+
+  # Added for notifications
+  amplify_analytics_pinpoint: ^0.6.0
+  flutter_local_notifications: ^13.0.0
+  path_provider: ^2.0.11
+  flutter_riverpod: ^2.0.2
+  freezed_annotation: ^2.1.0  
+  hooks_riverpod: ^2.0.2
+  json_annotation: ^4.7.0
+  flutter_hooks: ^0.18.5+1
+  go_router: ^5.1.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -61,6 +79,11 @@ dev_dependencies:
   amplify_auth_cognito: ^0.6.0
   intl: ^0.17.0
   date_format: ^2.0.7
+
+  # Added for notification work
+  build_runner: ^2.3.2
+  freezed: ^2.2.1
+  json_serializable: ^6.5.4
 
 
 # For information on the generic Dart part of this file, see the
