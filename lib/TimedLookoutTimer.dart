@@ -42,8 +42,11 @@ class TimedLookoutTimer extends StatelessWidget {
     if(timeUntilDuration.inHours.toString() == "0") {
       timeUntil = "${timeUntilDuration.inMinutes.remainder(60)} min until Check In";
     }
+    else if (timeUntilDuration.inMinutes.remainder(60).toString() == "0"){
+      timeUntil = "${timeUntilDuration.inHours} hr Until Check In";
+    }
     else {
-      timeUntil = "${timeUntilDuration.inHours} Hr ${timeUntilDuration.inMinutes.remainder(60)} Min Until Check In";
+      timeUntil = "${timeUntilDuration.inHours} hr ${timeUntilDuration.inMinutes.remainder(60)} min Until Check In";
     }
 
     return Card(
@@ -72,14 +75,6 @@ class TimedLookoutTimer extends StatelessWidget {
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Roboto', color: Colors.white),
                       )
-                  ),
-                  Center(
-                    child:
-                      Text(
-                        "end time: ${DateFormat("HH:mm").format(endTime)}",
-                        // DateFormat("HH:mm").format(endTime), 
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, fontFamily: 'Roboto', color: Colors.white),
-                      ),
                   ), 
                   SizedBox(height: 2),
                   Center(

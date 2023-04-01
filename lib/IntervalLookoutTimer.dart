@@ -38,6 +38,27 @@ class IntervalLookoutTimer extends StatelessWidget {
     final length = durationParse(intervalLookout.length.toString());
     final endTime =
         DateTime.parse(intervalLookout.start.toString()).toLocal().add(length);
+    Duration timeUntilDuration = endTime.difference(DateTime.now());
+    String timeUntil = "";
+    if(timeUntilDuration.inHours.toString() == "0") {
+      timeUntil = "${timeUntilDuration.inMinutes.remainder(60)} min until Check In";
+    }
+    else if (timeUntilDuration.inMinutes.remainder(60).toString() == "0"){
+      timeUntil = "${timeUntilDuration.inHours} hr Until Check In";
+    }
+    else {
+      timeUntil = "${timeUntilDuration.inHours} hr ${timeUntilDuration.inMinutes.remainder(60)} min Until Check In";
+    }
+    String intervalInformation = "";
+    if(length.inHours.toString() == "0"){
+      intervalInformation = "${length.inMinutes.remainder(60)} min Interval";
+    }
+    else if (length.inMinutes.remainder(60).toString() == "0"){
+      intervalInformation = "${length.inHours} hr Interval";
+    }
+    else {
+      intervalInformation = "${length.inHours} hr ${length.inMinutes.remainder(60)} min Interval";
+    }
     return Card(
       color: Colors.teal,
       child: InkWell(
@@ -59,7 +80,7 @@ class IntervalLookoutTimer extends StatelessWidget {
                   Center(
                     child:
                       Text(
-                        DateFormat("HH:mm").format(endTime), 
+                        timeUntil, 
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Roboto', color: Colors.white),
                       ),
                   ), 
@@ -77,7 +98,8 @@ class IntervalLookoutTimer extends StatelessWidget {
                     child:
                       Text(
                         // "Interval Lookout",
-                        intervalLookout.end.toString(),
+                        // intervalLookout.end.toString(),
+                        intervalInformation,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontSize: 15, fontFamily: 'Roboto', color: Colors.white),
