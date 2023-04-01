@@ -49,5 +49,14 @@
 	<true/>
 	<key>NSContactsUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your contacts to show them in the app.</string>
+	<key>CFBundleURLTypes</key>
+     <array>
+         <dict>
+             <key>CFBundleURLSchemes</key>
+             <array>
+                 <string>myapp</string>
+             </array>
+         </dict>
+     </array>
 </dict>
 </plist>

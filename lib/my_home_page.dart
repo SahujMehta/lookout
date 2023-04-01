@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lookout/firebase_options.dart';
 import 'package:lookout/models/ModelProvider.dart';
 import 'contacts.dart';
 import 'help.dart';
@@ -23,10 +24,37 @@ import 'models/ModelProvider.dart';
 import 'models/Todo.dart';
 //****    ****
 
+// Notification imports
+import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import './notifications/controllers/notifications_controller.dart';
+
+// Authentication imports
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'amplifyconfiguration.dart';
+import 'package:amplify_authenticator/amplify_authenticator.dart';
+
+NotificationsController notificationController = NotificationsController();
+
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
+
+////// NOTIFICATIONS TESTING
+@override
+Widget build(BuildContext context) {
+  return Authenticator(
+    child: MaterialApp.router(
+      builder: Authenticator.builder(),
+      title: 'The Quiz App',
+      theme: ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
+    ),
+  );
+}
+////// NOTIFICATIONS TESTING
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
@@ -131,6 +159,7 @@ class _HomeState extends State<Home> {
   Future<void> _initializeApp() async {
     // configure Amplify
     await _configureAmplify();
+    await _configureFirebase();
 
     // Query and Observe updates to models
     _subscription = Amplify.DataStore.observeQuery(TimedLookout.classType)
@@ -149,10 +178,16 @@ class _HomeState extends State<Home> {
           AmplifyDataStore(modelProvider: ModelProvider.instance);
       final apiPlugin = AmplifyAPI();
       final authPlugin = AmplifyAuthCognito();
+      final analyticsPlugin = AmplifyAnalyticsPinpoint(); // Notifications
 
       // add Amplify plugins
       if (!Amplify.isConfigured) {
-        await Amplify.addPlugins([_dataStorePlugin, apiPlugin, authPlugin]);
+        await Amplify.addPlugins([
+          _dataStorePlugin,
+          apiPlugin,
+          authPlugin,
+          analyticsPlugin // Notifications
+        ]);
         await Amplify.configure(amplifyconfig);
       }
       // configure Amplify
@@ -163,6 +198,27 @@ class _HomeState extends State<Home> {
       // but this will be sufficient for the purposes of this tutorial
       safePrint('An error occurred while configuring Amplify: $e');
     }
+  }
+
+// Handles messages in the background
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    notificationController = NotificationsController();
+    await notificationController.messageHandler(message);
+  }
+
+// Initiliazing firebase and the background handler
+  Future<void> _configureFirebase() async {
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    } catch (e) {
+      safePrint('An error occurred while configuring Amplify: $e');
+    }
+
+    await notificationController.initialize();
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
   @override
