@@ -45,8 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LookOut'),
+        title: Text('LookOut', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
         centerTitle: true,
+        elevation: 0,
+        backgroundColor: Color(0xff241181),
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
