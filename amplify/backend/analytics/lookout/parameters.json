@@ -1,0 +1,21 @@
+{
+    "appName": "lookout",
+    "roleName": "pinpointLambdaRolee6fd4f92",
+    "cloudformationPolicyName": "cloudformationPolicye6fd4f92",
+    "cloudWatchPolicyName": "cloudWatchPolicye6fd4f92",
+    "pinpointPolicyName": "pinpointPolicye6fd4f92",
+    "authPolicyName": "pinpoint_amplify_e6fd4f92",
+    "unauthPolicyName": "pinpoint_amplify_e6fd4f92",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

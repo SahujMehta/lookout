@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:lookout/add_interval_lookout.dart';
+import 'package:lookout/interval_lookout_check_in.dart';
+import 'package:lookout/timed_lookout_check_in.dart';
 import 'contacts.dart';
 import 'help.dart';
 import 'settings.dart';
+import 'dart:async';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_datastore/amplify_datastore.dart';
+import 'amplifyconfiguration.dart';
+import 'models/ModelProvider.dart';
+import 'package:intl/intl.dart';
+import 'package:date_format/date_format.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'add_timed_lookout.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'TimedLookoutTimer.dart';
+import 'IntervalLookoutTimer.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -29,7 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('LookOut'),
+        title: Text('LookOut', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Color(0xff241181),
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -66,16 +85,51 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<String> items = [];
+  late StreamSubscription<QuerySnapshot<TimedLookout>> _subscription;
+  late StreamSubscription<QuerySnapshot<IntervalLookout>> _intervalSubscription;
+  List<TimedLookout> _timedLookouts = [];
+  List<IntervalLookout> _intervalLookouts = [];
+  List<Widget> timerList = [];
+  late Timer _timer;
 
-  void addItem() {
-    setState(() {
-      items.add(DateTime.now().toString());
+  @override
+  void initState() {
+    // kick off app initialization
+    _initializeDatabase();
+    super.initState();
+    _timer = Timer.periodic(
+        Duration(seconds: 1), (timer) {
+          generateTimerList();
+          });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subscription.cancel();
+    _intervalSubscription.cancel();
+    _timer.cancel();
+  }
+
+  Future<void> _initializeDatabase() async {
+    _subscription = Amplify.DataStore.observeQuery(TimedLookout.classType)
+        .listen((QuerySnapshot<TimedLookout> snapshot) {
+      setState(() {
+        _timedLookouts = snapshot.items;
+      });
+    });
+    _intervalSubscription =
+        Amplify.DataStore.observeQuery(IntervalLookout.classType)
+            .listen((QuerySnapshot<IntervalLookout> snapshot) {
+      setState(() {
+        _intervalLookouts = snapshot.items;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    generateTimerList();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -85,7 +139,13 @@ class _HomeState extends State<Home> {
           width: double.infinity,
           height: 80,
           child: ElevatedButton(
-            onPressed: addItem,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AddTimedLookout()),
+              );
+            },
             child: Text(
               'Start Timed LookOut',
               style: TextStyle(
@@ -100,7 +160,13 @@ class _HomeState extends State<Home> {
           width: double.infinity,
           height: 80,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AddIntervalLookout()),
+              );
+            },
             child: Text(
               'Start Interval LookOut',
               style: TextStyle(
@@ -113,22 +179,29 @@ class _HomeState extends State<Home> {
         SizedBox(height: 16), // add some spacing between buttons
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.grey[200],
-            ),
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(items[index]),
-                );
-              },
-            ),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+              ),
+              child: ListView(children: timerList)),
         ),
       ],
     );
+  }
+
+  void generateTimerList() {
+    setState(() {
+      timerList = [
+        ..._timedLookouts
+            .map(
+                (timedLookout) => TimedLookoutTimer(timedLookout: timedLookout))
+            .toList(),
+        ..._intervalLookouts
+            .map((intervalLookout) =>
+                IntervalLookoutTimer(intervalLookout: intervalLookout))
+            .toList()
+      ];
+    });
   }
 }
