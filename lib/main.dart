@@ -5,10 +5,18 @@ import 'contacts.dart';
 import 'help.dart';
 import 'settings.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_datastore/amplify_datastore.dart';
+import 'amplifyconfiguration.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'add_timed_lookout.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'models/ModelProvider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   requestContactPermission();
+  await _configureAmplify();
   runApp(MyApp());
 }
 
@@ -19,10 +27,25 @@ Future<void> requestContactPermission() async {
   }
 }
 
+// Initial configuration settings
+Future<void> _configureAmplify() async {
+  try {
+    final _dataStorePlugin =
+        AmplifyDataStore(modelProvider: ModelProvider.instance);
+    final apiPlugin = AmplifyAPI();
+    final authPlugin = AmplifyAuthCognito();
+    await Amplify.addPlugins([_dataStorePlugin, apiPlugin, authPlugin]);
+    await Amplify.configure(amplifyconfig);
+  } catch (e) {
+    safePrint('An error occurred while configuring Amplify: $e');
+  }
+}
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'LookOut',
       theme: new ThemeData(
           primarySwatch: Colors.teal, canvasColor: const Color(0xff241181)),
