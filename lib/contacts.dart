@@ -42,9 +42,49 @@ class _ContactsListState extends State<ContactsList> {
     });
   }
 
-  void createGroup(String groupName) {
+  void createGroup() async {
+    final groupNameController = TextEditingController();
+    final groupName = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Create New Group'),
+          content: TextFormField(
+            autofocus: true,
+            controller: groupNameController,
+            decoration: InputDecoration(
+              hintText: 'Group Name',
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a group name';
+              }
+              return null;
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Create'),
+              onPressed: () {
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop(groupNameController.text);
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
     setState(() {
-      groups.add(Group(name: groupName, contacts: []));
+      if (groupName != null) {
+        groups.add(Group(name: groupName, contacts: []));
+      }
     });
   }
 
@@ -90,7 +130,7 @@ class _ContactsListState extends State<ContactsList> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           if (groups.isEmpty) {
-            createGroup('New Group');
+            createGroup();
           }
           filteredContacts = allContacts;
           await Navigator.push(
