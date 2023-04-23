@@ -33,6 +33,7 @@ class IntervalLookout extends Model {
   final TemporalTime? _length;
   final String? _name;
   final String? _description;
+  final String? _email;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -69,6 +70,10 @@ class IntervalLookout extends Model {
     return _description;
   }
   
+  String? get email {
+    return _email;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -77,16 +82,17 @@ class IntervalLookout extends Model {
     return _updatedAt;
   }
   
-  const IntervalLookout._internal({required this.id, start, end, length, name, description, createdAt, updatedAt}): _start = start, _end = end, _length = length, _name = name, _description = description, _createdAt = createdAt, _updatedAt = updatedAt;
+  const IntervalLookout._internal({required this.id, start, end, length, name, description, email, createdAt, updatedAt}): _start = start, _end = end, _length = length, _name = name, _description = description, _email = email, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory IntervalLookout({String? id, TemporalDateTime? start, TemporalDateTime? end, TemporalTime? length, String? name, String? description}) {
+  factory IntervalLookout({String? id, TemporalDateTime? start, TemporalDateTime? end, TemporalTime? length, String? name, String? description, String? email}) {
     return IntervalLookout._internal(
       id: id == null ? UUID.getUUID() : id,
       start: start,
       end: end,
       length: length,
       name: name,
-      description: description);
+      description: description,
+      email: email);
   }
   
   bool equals(Object other) {
@@ -102,7 +108,8 @@ class IntervalLookout extends Model {
       _end == other._end &&
       _length == other._length &&
       _name == other._name &&
-      _description == other._description;
+      _description == other._description &&
+      _email == other._email;
   }
   
   @override
@@ -119,6 +126,7 @@ class IntervalLookout extends Model {
     buffer.write("length=" + (_length != null ? _length!.format() : "null") + ", ");
     buffer.write("name=" + "$_name" + ", ");
     buffer.write("description=" + "$_description" + ", ");
+    buffer.write("email=" + "$_email" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -126,14 +134,15 @@ class IntervalLookout extends Model {
     return buffer.toString();
   }
   
-  IntervalLookout copyWith({TemporalDateTime? start, TemporalDateTime? end, TemporalTime? length, String? name, String? description}) {
+  IntervalLookout copyWith({TemporalDateTime? start, TemporalDateTime? end, TemporalTime? length, String? name, String? description, String? email}) {
     return IntervalLookout._internal(
       id: id,
       start: start ?? this.start,
       end: end ?? this.end,
       length: length ?? this.length,
       name: name ?? this.name,
-      description: description ?? this.description);
+      description: description ?? this.description,
+      email: email ?? this.email);
   }
   
   IntervalLookout.fromJson(Map<String, dynamic> json)  
@@ -143,15 +152,16 @@ class IntervalLookout extends Model {
       _length = json['length'] != null ? TemporalTime.fromString(json['length']) : null,
       _name = json['name'],
       _description = json['description'],
+      _email = json['email'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'start': _start?.format(), 'end': _end?.format(), 'length': _length?.format(), 'name': _name, 'description': _description, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'start': _start?.format(), 'end': _end?.format(), 'length': _length?.format(), 'name': _name, 'description': _description, 'email': _email, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'start': _start, 'end': _end, 'length': _length, 'name': _name, 'description': _description, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'start': _start, 'end': _end, 'length': _length, 'name': _name, 'description': _description, 'email': _email, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<IntervalLookoutModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<IntervalLookoutModelIdentifier>();
@@ -161,6 +171,7 @@ class IntervalLookout extends Model {
   static final QueryField LENGTH = QueryField(fieldName: "length");
   static final QueryField NAME = QueryField(fieldName: "name");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
+  static final QueryField EMAIL = QueryField(fieldName: "email");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "IntervalLookout";
     modelSchemaDefinition.pluralName = "IntervalLookouts";
@@ -204,6 +215,12 @@ class IntervalLookout extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: IntervalLookout.DESCRIPTION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: IntervalLookout.EMAIL,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
