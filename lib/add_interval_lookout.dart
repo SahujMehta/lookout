@@ -23,6 +23,7 @@ class AddIntervalLookout extends StatefulWidget {
 class _AddIntervalLookoutState extends State<AddIntervalLookout> {
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
+  late final TextEditingController _emailController;
 
   Duration duration = Duration(hours: 0);
   DateTime endDate = DateTime.now();
@@ -32,6 +33,7 @@ class _AddIntervalLookoutState extends State<AddIntervalLookout> {
   void initState() {
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
+    _emailController = TextEditingController();
     super.initState();
   }
 
@@ -40,11 +42,13 @@ class _AddIntervalLookoutState extends State<AddIntervalLookout> {
     super.dispose();
     _titleController.dispose();
     _descriptionController.dispose();
+    _emailController.dispose();
   }
 
   Future<void> _saveIntervalLookout() async {
     final title = _titleController.text;
     final description = _descriptionController.text;
+    final email = _emailController.text;
 
     final dur_time =
         DateFormat('H:mm').parse(duration.toString().substring(0, 4));
@@ -59,7 +63,8 @@ class _AddIntervalLookoutState extends State<AddIntervalLookout> {
       length: TemporalTime(length),
       name: title,
       description: description,
-      end: TemporalDateTime(endDateTime)
+      end: TemporalDateTime(endDateTime),
+      email: email
     );
     try {
       await Amplify.DataStore.save(newTimer);
@@ -230,6 +235,26 @@ class _AddIntervalLookoutState extends State<AddIntervalLookout> {
                       ),
                     )),
                   ]),
+                  SizedBox(height: 15),
+                  Row(
+                      children: [
+                        Text(
+                          "Contact:",
+                          style: TextStyle(color: Colors.teal, fontSize: 25)
+                        ),
+                        SizedBox(width: 33,),
+                        Expanded(
+                        child:
+                        TextFormField(
+                          style: TextStyle(color: Colors.black),
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                              filled: true,
+                              fillColor: Color.fromARGB(255, 243, 243, 243),
+                              hintText: 'Email Address',),
+                        )),
+                    ]),
                   SizedBox(height: 20,),
                   Center(
                     child:

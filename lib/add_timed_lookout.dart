@@ -23,6 +23,7 @@ class AddTimedLookout extends StatefulWidget {
 class _AddTimedLookoutState extends State<AddTimedLookout> {
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
+  late final TextEditingController _emailController;
 
   Duration duration = Duration(hours: 0);
 
@@ -30,6 +31,7 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
   void initState() {
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
+    _emailController = TextEditingController();
     super.initState();
   }
 
@@ -38,11 +40,13 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
     super.dispose();
     _titleController.dispose();
     _descriptionController.dispose();
+    _emailController.dispose();
   }
 
   Future<void> _saveTimedLookout() async {
     final name = _titleController.text;
     final description = _descriptionController.text;
+    final email = _emailController.text;
 
     final dur_time =
         DateFormat('H:mm').parse(duration.toString().substring(0, 4));
@@ -53,7 +57,8 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
       start: start,
       length: TemporalTime(length),
       name: name,
-      description: description
+      description: description,
+      email: email
     );
     try {
       await Amplify.DataStore.save(newTimer);
@@ -96,7 +101,7 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                           "Name:",
                           style: TextStyle(color: Colors.teal, fontSize: 25)
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(width: 27,),
                         Expanded(
                         child:
                         TextFormField(
@@ -117,7 +122,7 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                       style: TextStyle(
                           color: Colors.teal, fontSize: 25, fontFamily: 'Roboto'),
                     ),
-                    SizedBox(width: 19,),
+                    SizedBox(width: 37,),
                     Expanded(
                       child:
                     InkWell(
@@ -150,6 +155,26 @@ class _AddTimedLookoutState extends State<AddTimedLookout> {
                       ),
                     )),
                   ]),
+                  SizedBox(height: 15),
+                  Row(
+                      children: [
+                        Text(
+                          "Contact:",
+                          style: TextStyle(color: Colors.teal, fontSize: 25)
+                        ),
+                        SizedBox(width: 10,),
+                        Expanded(
+                        child:
+                        TextFormField(
+                          style: TextStyle(color: Colors.black),
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+                              filled: true,
+                              fillColor: Color.fromARGB(255, 243, 243, 243),
+                              hintText: 'Email Address',),
+                        )),
+                    ]),
                   SizedBox(height: 20,),
                   Center(
                     child:
