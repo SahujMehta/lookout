@@ -7,6 +7,24 @@ class Help extends StatelessWidget {
     return ListView(
       children: [
         ListTile(
+            title: CollapsibleCard(
+          title: 'What is LookOut?',
+          content:
+              'LookOut App is a mobile application designed to create a proactive and easy way for young adults to ensure their own safety in uncertain situations when they are out alone, such as driving to an unfamiliar neighborhood or going on a first date with an internet match.',
+        )),
+        ListTile(
+            title: CollapsibleCard(
+          title: 'What information is included in a LookOut?',
+          content:
+              'A LookOut includes emergency contacts, description of activity, and a customized pin. The user can also set geotagged "safezones" where alerts may be automatically disabled once the user returns to a specific geographic zone, such as their house or work.',
+        )),
+        ListTile(
+            title: CollapsibleCard(
+          title: 'Is my personal information safe with LookOut App?',
+          content:
+              'LookOut App takes user privacy and security seriously. The app only shares user information with preselected emergency contacts in case of missed check-ins. The app uses encryption and follows best practices to protect user data.',
+        )),
+        ListTile(
           title: CollapsibleCard(
             title: 'What is an Interval LookOut?',
             content:
