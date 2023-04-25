@@ -30,7 +30,7 @@ export 'Todo.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "ff84e29fa9a82f42757cce1b2a575667";
+  String version = "b84e4a7f9eac4d4317a1899e7eb37e17";
   @override
   List<ModelSchema> modelSchemas = [IntervalLookout.schema, TimedLookout.schema, Todo.schema];
   static final ModelProvider _instance = ModelProvider();

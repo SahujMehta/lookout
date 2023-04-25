@@ -5,6 +5,7 @@ type IntervalLookout @model @auth(rules: [{allow: public}]) {
   length: AWSTime
   name: String
   description: String
+  email: AWSEmail
 }
 
 type TimedLookout @model @auth(rules: [{allow: public}]) {
@@ -13,6 +14,7 @@ type TimedLookout @model @auth(rules: [{allow: public}]) {
   length: AWSTime
   name: String
   description: String
+  email: AWSEmail
 }
 
 type Todo @model @auth(rules: [{allow: public}]) {
@@ -20,4 +22,5 @@ type Todo @model @auth(rules: [{allow: public}]) {
   name: String!
   description: String
   isComplete: Boolean
-} 
+}
+ 
